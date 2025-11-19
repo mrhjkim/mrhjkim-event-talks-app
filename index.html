@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech Talks Today</title>
+  <style>
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+.search-container {
+  margin-top: 1rem;
+}
+
+#search {
+  width: 80%;
+  max-width: 400px;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#schedule-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.talk {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.talk-info {
+  flex-grow: 1;
+}
+
+.talk h2 {
+  margin-top: 0;
+}
+
+.talk .speakers {
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.talk .category {
+  display: inline-block;
+  background-color: #333;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  margin-right: 0.5rem;
+}
+
+.talk .time {
+  flex-shrink: 0;
+  width: 120px;
+  text-align: right;
+  font-weight: bold;
+}
+
+.break {
+  text-align: center;
+  font-weight: bold;
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: #eee;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Tech Talks Today</h1>
+    <div class="search-container">
+      <input type="text" id="search" placeholder="Search by category...">
+    </div>
+  </header>
+  <main id="schedule-container">
+    <!-- Schedule will be dynamically generated here -->
+  </main>
+  <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const scheduleContainer = document.getElementById('schedule-container');
+  const searchInput = document.getElementById('search');
+  const talks = [
+  {
+    "title": "The Future of JavaScript",
+    "speakers": ["Jane Doe"],
+    "category": ["JavaScript", "Web Development"],
+    "duration": 60,
+    "description": "A deep dive into the latest features and upcoming changes in JavaScript."
+  },
+  {
+    "title": "Building Scalable APIs with Node.js",
+    "speakers": ["John Smith"],
+    "category": ["Node.js", "API", "Backend"],
+    "duration": 60,
+    "description": "Learn how to design and build robust and scalable APIs using Node.js and Express."
+  },
+  {
+    "title": "CSS Grid and Flexbox for Modern Layouts",
+    "speakers": ["Emily White"],
+    "category": ["CSS", "Frontend"],
+    "duration": 60,
+    "description": "Master the power of CSS Grid and Flexbox to create complex and responsive layouts with ease."
+  },
+  {
+    "title": "Introduction to Machine Learning with Python",
+    "speakers": ["David Green", "Sarah Brown"],
+    "category": ["Python", "Machine Learning"],
+    "duration": 60,
+    "description": "A beginner-friendly introduction to the world of machine learning using Python and popular libraries."
+  },
+  {
+    "title": "Cybersecurity Best Practices for Web Developers",
+    "speakers": ["Michael Black"],
+    "category": ["Cybersecurity", "Web Development"],
+    "duration": 60,
+    "description": "Learn how to secure your web applications from common vulnerabilities and attacks."
+  },
+  {
+    "title": "The Rise of Serverless Computing",
+    "speakers": ["Chris Blue"],
+    "category": ["Serverless", "Cloud"],
+    "duration": 60,
+    "description": "An overview of serverless architecture, its benefits, and how to get started with serverless functions."
+  }
+];
+
+  displaySchedule(talks);
+
+  searchInput.addEventListener('input', () => {
+    const searchTerm = searchInput.value.toLowerCase();
+    const filteredTalks = talks.filter(talk => 
+      talk.category.some(cat => cat.toLowerCase().includes(searchTerm))
+    );
+    displaySchedule(filteredTalks);
+  });
+
+  function displaySchedule(talksToDisplay) {
+    scheduleContainer.innerHTML = '';
+    let currentTime = new Date();
+    currentTime.setHours(10, 0, 0, 0);
+
+    talksToDisplay.forEach((talk, index) => {
+      if (index === 3) {
+        const lunchBreak = document.createElement('div');
+        lunchBreak.className = 'break';
+        const lunchStart = formatTime(currentTime);
+        currentTime.setHours(currentTime.getHours() + 1);
+        const lunchEnd = formatTime(currentTime);
+        lunchBreak.textContent = `Lunch Break (${lunchStart} - ${lunchEnd})`;
+        scheduleContainer.appendChild(lunchBreak);
+      }
+
+      const talkElement = document.createElement('div');
+      talkElement.className = 'talk';
+
+      const startTime = formatTime(currentTime);
+      currentTime.setHours(currentTime.getHours() + 1);
+      const endTime = formatTime(currentTime);
+
+      talkElement.innerHTML = `
+        <div class="talk-info">
+          <h2>${talk.title}</h2>
+          <div class="speakers">By: ${talk.speakers.join(', ')}</div>
+          <div class="categories">
+            ${talk.category.map(cat => `<span class="category">${cat}</span>`).join('')}
+          </div>
+          <p>${talk.description}</p>
+        </div>
+        <div class="time">${startTime} - ${endTime}</div>
+      `;
+      scheduleContainer.appendChild(talkElement);
+
+      if (index < talksToDisplay.length - 1) {
+        currentTime.setMinutes(currentTime.getMinutes() + 10);
+      }
+    });
+  }
+
+  function formatTime(date) {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+});
+  </script>
+</body>
+</html>

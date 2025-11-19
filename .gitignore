@@ -1,0 +1,15 @@
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*~
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Intermediate files
+script.js
+style.css
+talks.json
+finance-news-today.txt
